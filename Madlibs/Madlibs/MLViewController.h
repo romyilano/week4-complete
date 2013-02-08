@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MLViewController : UIViewController
+@interface MLViewController : UIViewController <UITextFieldDelegate>
+
 @property (weak, nonatomic) IBOutlet UITextField *textField1;
 @property (weak, nonatomic) IBOutlet UITextField *textField2;
 @property (weak, nonatomic) IBOutlet UITextField *textField3;

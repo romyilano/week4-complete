@@ -9,5 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface MLPoemViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UILabel *poemLabel;
+
+@property (strong, nonatomic) NSString* poem;
 
 @end
