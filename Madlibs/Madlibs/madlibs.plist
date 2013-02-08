@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>type</key>
+		<string>color</string>
+		<key>phrase</key>
+		<string>Roses are %@</string>
+	</dict>
+	<dict>
+		<key>type</key>
+		<string>noun plural</string>
+		<key>phrase</key>
+		<string>%@ are blue</string>
+	</dict>
+	<dict>
+		<key>type</key>
+		<string>adjective</string>
+		<key>phrase</key>
+		<string>Sugar is %@</string>
+	</dict>
+	<dict>
+		<key>type</key>
+		<string>noun plural</string>
+		<key>phrase</key>
+		<string>And so are %@</string>
+	</dict>
+</array>
+</plist>
