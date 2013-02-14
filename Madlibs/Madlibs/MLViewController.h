@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface MLViewController : UIViewController <UITextFieldDelegate>
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @property (weak, nonatomic) IBOutlet UITextField *textField1;
 @property (weak, nonatomic) IBOutlet UITextField *textField2;

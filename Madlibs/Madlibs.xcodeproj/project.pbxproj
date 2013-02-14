@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E850AA716CC85570068AC77 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 9E850AA616CC85560068AC77 /* README.md */; };
 		D932BF4316C4ABE40008D413 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D932BF4216C4ABE40008D413 /* UIKit.framework */; };
 		D932BF4516C4ABE40008D413 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D932BF4416C4ABE40008D413 /* Foundation.framework */; };
 		D932BF4716C4ABE40008D413 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D932BF4616C4ABE40008D413 /* CoreGraphics.framework */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9E850AA616CC85560068AC77 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		D932BF3E16C4ABE40008D413 /* Madlibs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Madlibs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D932BF4216C4ABE40008D413 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D932BF4416C4ABE40008D413 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -63,6 +65,7 @@
 		D932BF3316C4ABE30008D413 = {
 			isa = PBXGroup;
 			children = (
+				9E850AA616CC85560068AC77 /* README.md */,
 				D932BF4816C4ABE40008D413 /* Madlibs */,
 				D932BF4116C4ABE40008D413 /* Frameworks */,
 				D932BF3F16C4ABE40008D413 /* Products */,
@@ -177,6 +180,7 @@
 				D932BF5F16C4ABE40008D413 /* MLViewController.xib in Resources */,
 				D932BF6916C4AE300008D413 /* MLPoemViewController.xib in Resources */,
 				D932BF6B16C4B3950008D413 /* madlibs.plist in Resources */,
+				9E850AA716CC85570068AC77 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,6 +311,7 @@
 				D932BF6416C4ABE40008D413 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
