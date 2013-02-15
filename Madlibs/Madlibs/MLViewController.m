@@ -12,11 +12,22 @@
 // doing the textfields with the scrollview is always a PITA
 // http://stackoverflow.com/questions/1126726/how-to-make-a-uitextfield-move-up-when-keyboard-is-present
 #define kOFFSET_FOR_KEYBOARD 80.0
+#define SCROLLVIEW_HEIGHT       460
+#define     SCROLLVIEW_WIDTH    320
+
+#define SCROLLVIEW_CONTENT_HEIGHT   720
+#define SCROLLVIEW_CONTENT_WIDTH    320
 
 @interface MLViewController ()
-    // current content scroll view position
-    // and frame
+{
+    BOOL keyboardVisible;
+    CGPoint offset;
     
+    UITextField *currentTextField;
+
+}
+-(void)keyboardWasShown:(NSNotification *)aNotification;
+-(void)keyboardDidHide:(NSNotification *)aNotification;
 @end
 
 @implementation MLViewController
@@ -31,21 +42,9 @@
     NSArray* textFields = [NSArray arrayWithObjects:self.textField1, self.textField2, self.textField3, self.textField4, nil];
     
     
-    // get notified when the keyboard is shown
-    // when it's shown then you throw a method in there.
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(keyboardWasShown:)
-     name:UIKeyboardDidShowNotification
-     object:nil];
-    
-    //subscribe for UIKeyboardWillHideNotification
-   [[NSNotificationCenter defaultCenter]
-    addObserver:self
-    selector:@selector(keyboardHidden:)
-    name:UIKeyboardWillHideNotification
-    object:nil];
-    
+    // specify the frame size for the scrollview
+    self.scrollView.frame = CGRectMake(0, 0, 320, 460);
+    [[self scrollView] setContentSize:CGSizeMake(320, 1040)];
     
     
     [self.poemLines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -58,14 +57,49 @@
     
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // get notified when the keyboard is shown
+    // when it's shown then you throw a method in there.
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(keyboardWasShown:)
+     name:UIKeyboardDidShowNotification
+     object:nil];
+    
+    //subscribe for UIKeyboardWillHideNotification
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(keyboardDidHide:)
+     name:UIKeyboardWillHideNotification
+     object:nil];
+    
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    // -- remove the notifications for the keyboard --
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardDidShowNotification
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardDidHideNotification
+                                                  object:nil];
+    
+    [[self view] endEditing:YES];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)goPressed:(id)sender
-{
+- (IBAction)goPressed:(id)sender {
     NSMutableString* poemString = [NSMutableString string];
     
     NSArray* textFields = [NSArray arrayWithObjects:self.textField1, self.textField2, self.textField3, self.textField4, nil];
@@ -92,45 +126,55 @@
 }
 
 #pragma mark-keyboard methods
--(void)keyboardWasShown:(NSNotification *)aNotification
-{
+-(void)keyboardWasShown:(NSNotification *)aNotification {
     
-    NSLog(@"The keyboard was shown");
-    /*
+    // the keyboard is already visible so we are going to jump out of this method
+    if(keyboardVisible) return;
+    
     NSDictionary *info = [aNotification userInfo];
-    // get the keyboard size
-    // need to ge tthe keyboard's height but we can only do it if we get the width first
-    CGRect kbRect = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-    CGSize kbSize = kbRect.size;
     
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    CGFloat sWidth = screenRect.size.width;
-    CGFloat sHeight = screenRect.size.height;
+    // -- obtain the size of the keyboard --
+    NSValue *aValue = [info objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [self.view convertRect:[aValue CGRectValue] fromView:nil];
     
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    NSLog(@"%f", keyboardRect.size.height);
     
-    if ((orientation == UIDeviceOrientationPortrait) || (orientation == UIDeviceOrientationPortraitUpsideDown)) {
-        CGFloat kbHeight = kbSize.height;
-        CGFloat kbTop = sHeight - kbHeight;
-    }
-    else
-    {
-        // notice that the keyboard size not oriented
-        // so use width property instead
-        CGFloat kbHeight = kbSize.width;
-        CGFloat kbTop = sWidth - kbHeight;
-    }
-     (
-     */
+    //= resize the scrollview (with the keyboard)--
+    CGRect viewFrame = [self.scrollView frame];
+    viewFrame.size.height -= keyboardRect.size.height;
+    self.scrollView.frame = viewFrame;
     
+    // -- scroll to the current text field
+    CGRect textFieldRect = [currentTextField frame];
+    
+    [self.scrollView scrollRectToVisible:textFieldRect animated:YES];
+    
+    keyboardVisible=YES;
     
 }
 
--(void)keyboardHidden:(NSNotification *)aNotification
+-(void)keyboardDidHide:(NSNotification *)aNotification
 {
-    NSLog(@"The keyboard was hidden");
+    
+    if(!keyboardVisible)
+    {
+        NSLog(@"the keyboard is already hidden. ignoring notaification");
+        return;
+    }
+    
+    NSDictionary *info = [aNotification userInfo];
+    // obtaint he size of the keyboard
+    NSValue *aValue = [info objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [[self view] convertRect:[aValue CGRectValue] fromView:nil];
+    
+    // -- resize the scroll view back to the original size
+    // without the keyboard
+    CGRect viewFrame = [self.scrollView frame];
+    viewFrame.size.height += keyboardRect.size.height;
+    self.scrollView.frame = viewFrame;
+    
+    keyboardVisible=NO;
 }
-
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -158,4 +202,14 @@
     return YES;
 }
 
+-(void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    currentTextField=textField;
+    
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
+    currentTextField=nil;
+}
 @end

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MLViewController : UIViewController <UITextFieldDelegate>
+@interface MLViewController : UIViewController <UITextFieldDelegate, UIScrollViewDelegate>
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @property (weak, nonatomic) IBOutlet UITextField *textField1;
@@ -19,5 +19,8 @@
 @property (strong, nonatomic) NSArray* poemLines;
 
 - (IBAction)goPressed:(id)sender;
+
+
+
 
 @end
